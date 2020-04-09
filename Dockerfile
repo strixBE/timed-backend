@@ -27,5 +27,9 @@ COPY . /app
 RUN mkdir -p /var/www/static \
   && ENV=docker ./manage.py collectstatic --noinput
 
-EXPOSE 80
+RUN groupadd -g 999 appuser && \
+  useradd -r -u 999 -g appuser appuser
+USER appuser
+
+EXPOSE 8000
 CMD /bin/sh -c "wait-for-it.sh $DJANGO_DATABASE_HOST:$DJANGO_DATABASE_PORT -t $WAITFORIT_TIMEOUT -- ./manage.py migrate && uwsgi"

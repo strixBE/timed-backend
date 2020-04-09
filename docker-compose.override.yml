@@ -6,6 +6,8 @@ services:
       context: .
       args:
         REQUIREMENTS: requirements-dev.txt
+    ports:
+      - 8000:8000
     depends_on:
       - mailhog
     environment:
@@ -13,7 +15,7 @@ services:
       - EMAIL_URL=smtp://mailhog:1025
     volumes:
       - ./:/app
-    command: /bin/sh -c "wait-for-it.sh -t 60 db:5432 -- ./manage.py migrate && ./manage.py runserver 0.0.0.0:80"
+    command: /bin/sh -c "wait-for-it.sh -t 60 db:5432 -- ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"
 
   mailhog:
     image: mailhog/mailhog
